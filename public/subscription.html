@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Subscription Plans</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="style.css">
+  <script src="protect.js"></script>
+  <script src="navbar.js"></script>
+
+  <style>
+    .plan {
+  background-color: #fdfaf6;
+  border-radius: 20px;
+  padding: 1rem 1.5rem;  /* Reduced padding */
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.plan .plan-price {
+  font-size: 1.5rem;  /* Adjusted font size */
+}
+
+.subscribe-btn {
+  margin-top: 1rem; /* Reduced margin from 2rem to 1rem */
+  background-color: #a3d2ca;
+  color: white;
+  padding: 0.6rem 1.2rem;  /* Adjusted button padding */
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.subscribe-btn:hover {
+  background-color: #7fb8ae;
+}
+
+    .plans-container {
+      max-width: 900px;
+      margin: 1rem auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    
+
+    .plan {
+      background-color: #fdfaf6;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .plan:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .plan h2 {
+      color: #2f4f4f;
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+    }
+
+    .plan-price {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #444;
+      margin: 1rem 0;
+    }
+
+    .plan ul {
+      list-style: none;
+      padding: 0;
+      text-align: left;
+    }
+
+    .plan ul li {
+      margin: 0.75rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+      color: #555;
+    }
+
+    .plan ul li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #a3d2ca;
+      font-weight: bold;
+    }
+
+    .subscribe-btn {
+      margin-top: auto;
+      background-color: #a3d2ca;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .subscribe-btn:hover {
+      background-color: #7fb8ae;
+    }
+
+    .heading-section {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .heading-section h1 {
+      font-size: 2.5rem;
+      color: #2f4f4f;
+    }
+
+    .heading-section p {
+      font-size: 1.1rem;
+      color: #555;
+    }
+
+    /* Modal (Popup) Styles */
+    .modal {
+      display: none; 
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0,0,0);
+      background-color: rgba(0,0,0,0.4);
+      padding-top: 60px;
+    }
+
+    /* Modal Content */
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 400px;
+      border-radius: 10px;
+    }
+
+    /* Close Button */
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .payment-form input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .payment-form button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .payment-form button:hover {
+      background-color: #45a049;
+    }
+  </style>
+
+<script>
+  let currentPlan = 'free'; // default
+
+  function upgradeToPremium() {
+    document.getElementById("paymentModal").style.display = "block";
+  }
+
+  function switchToFree() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      localStorage.setItem(`plan_${user.userId}`, "free");
+    }
+    currentPlan = 'free';
+    updateButtons();
+    location.reload(); // refresh to update navbar
+  }
+
+  function handlePaymentFormSubmit(event) {
+    event.preventDefault();
+
+    // Simulate successful payment
+    currentPlan = 'premium';
+
+    // 🔐 Save plan for this specific user
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      localStorage.setItem(`plan_${user.userId}`, "premium");
+    }
+
+    closeModal();
+    updateButtons();
+    location.reload(); // ✅ force navbar to refresh and show "Streaks"
+  }
+
+  function updateButtons() {
+    const freeBtn = document.getElementById("free-btn");
+    const premiumBtn = document.getElementById("premium-btn");
+
+    if (currentPlan === 'premium') {
+      premiumBtn.textContent = "This is your current subscription!";
+      freeBtn.textContent = "Switch back to Free plan";
+      freeBtn.onclick = switchToFree;
+    } else {
+      freeBtn.textContent = "This is your current subscription!";
+      premiumBtn.textContent = "Upgrade to Premium";
+      premiumBtn.onclick = upgradeToPremium;
+    }
+  }
+
+  function closeModal() {
+    document.getElementById("paymentModal").style.display = "none";
+  }
+
+  window.onload = function () {
+    document.querySelector('.payment-form').addEventListener('submit', handlePaymentFormSubmit);
+
+    // 🧠 Load current user’s plan from localStorage
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      const savedPlan = localStorage.getItem(`plan_${user.userId}`);
+      if (savedPlan) {
+        currentPlan = savedPlan;
+      }
+    }
+
+    updateButtons();
+  }
+</script>
+
+
+</head>
+<body>
+
+  <body>
+    <div class="heading-section">
+      <h1>Find the Right Plan for You</h1>
+      <p>Start with the basics or upgrade for deeper insights, personalized growth, and guided calm.</p>
+    </div>
+  
+    <!-- Container for the plans -->
+    <div class="plans-container">
+      <!-- Free Plan -->
+      <div class="plan">
+        <h2>Free</h2>
+        <div class="plan-price">$0/mo</div>
+        <ul>
+          <li>Basic habit & mood tracking</li>
+          <li>Simple journal entries</li>
+          <li>Daily motivation reminders</li>
+        </ul>
+        <!-- Button for Free Plan -->
+        <button id="free-btn" class="subscribe-btn">This is your current subscription!</button>
+      </div>
+  
+      <!-- Premium Plan -->
+      <div class="plan">
+        <h2>Premium</h2>
+        <div class="plan-price">$4.99/mo</div>
+        <ul>
+          <li>Advanced analytics & mood insights</li>
+          <li>Personalized study & productivity planner</li>
+          <li>Guided breathing & relaxation sessions</li>
+          <li>Custom habit suggestions based on patterns</li>
+          <li>Visual goal tracking dashboard</li>
+          <li>Early access to new features</li>
+        </ul>
+        <!-- Button for Premium Plan -->
+        <button id="premium-btn" class="subscribe-btn">Upgrade to Premium</button>
+      </div>
+    </div>
+  
+    <!-- Modal for Payment Information -->
+    <div id="paymentModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Enter Payment Information</h2>
+        <form class="payment-form">
+          <label for="cardNumber">Card Number</label>
+          <input type="text" id="cardNumber" name="cardNumber" required />
+  
+          <label for="expiryDate">Expiration Date</label>
+          <input type="text" id="expiryDate" name="expiryDate" required />
+  
+          <label for="cvv">CVV</label>
+          <input type="text" id="cvv" name="cvv" required />
+  
+          <button type="submit">Submit Payment</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

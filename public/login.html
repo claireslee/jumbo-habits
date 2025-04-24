@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login – Jumbo Habits</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body style="
+    margin: 0;
+    font-family: 'Quicksand', sans-serif;
+    background-color: #fdf0e7;
+    color: #333;
+    background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+">
+  <div class="login-container">
+    <div class="logo-emoji">🐘</div>
+    <h1>Welcome to Jumbo Habits</h1>
+    <p>Sign in with your Tufts Google account to begin tracking your habits and journaling your thoughts.</p>
+
+    <!-- GSI Login Button -->
+    <div id="g_id_onload"
+         data-client_id="546944845086-kcu795birl8pt72j3gdg3gnmugh317ut.apps.googleusercontent.com"
+         data-context="signin"
+         data-ux_mode="popup"
+         data-callback="handleCredentialResponse"
+         data-auto_prompt="false">
+    </div>
+
+    <div class="g_id_signin"
+         data-type="standard"
+         data-size="large"
+         data-theme="outline"
+         data-text="signin_with"
+         data-shape="pill"
+         data-logo_alignment="left">
+    </div>
+  </div>
+
+  <script>
+    function handleCredentialResponse(response) {
+      const token = response.credential;
+      const payload = JSON.parse(atob(token.split('.')[1]));
+
+      console.log("✅ Google user:", payload);
+
+      // Store user info in localStorage
+      localStorage.setItem("user", JSON.stringify({
+        name: payload.name,
+        email: payload.email,
+        picture: payload.picture,
+        userId: payload.sub
+      }));
+
+      // Redirect to the home page
+      window.location.href = "/index.html";
+    }
+  </script>
+</body>
+</html>

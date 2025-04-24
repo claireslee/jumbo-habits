@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jumbo Habits – Journal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script src="protect.js"></script>
+  <script src="navbar.js"></script>
+  
+</head>
+<body>
+  <div class="container">
+    <h1>🌼 Today's Journal 🌼</h1>
+    <form id="journal-form">
+      <label for="date">Date</label>
+      <input type="date" id="date" name="date" required>
+
+      <label for="entry">Journal Entry</label>
+      <textarea id="entry" name="entry" placeholder="Write your thoughts, dreams, or reflections..."></textarea>
+
+      <button type="submit">Save Entry</button>
+    </form>
+
+    <p class="affirmation" id="affirmation"></p>
+<!-- 
+    <div class="streak-tracker">
+      <h2>🔥 Your Journal Streak</h2>
+      <div id="monthly-calendar" class="calendar-grid"></div>
+    </div> -->
+  </div>
+
+  <script>
+    const affirmations = [
+      "You're doing your best — and that is enough. 🌿",
+      "Today is a fresh start. 💫",
+      "You are growing in all the right ways. 🌱",
+      "Small steps are still progress. 🐢💛",
+      "Your words matter. Your story matters. 📝"
+    ];
+
+    document.getElementById("journal-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const date = document.getElementById("date").value;
+      const entry = document.getElementById("entry").value;
+
+      // TODO: Replace with real user ID from Google/Auth0
+      const userId = "auth0|abc123";
+
+      const res = await fetch('/api/journal', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, date, entry })
+      });
+
+      const data = await res.json();
+
+      // Show affirmation
+      const affirmation = affirmations[Math.floor(Math.random() * affirmations.length)];
+      document.getElementById("affirmation").textContent = affirmation;
+
+      // Clear the form
+      document.getElementById("entry").value = "";
+    });
+
+    /* ENDDDDD */
+
+    const userId = JSON.parse(localStorage.getItem("user")).userId;
+  const streakKey = `journal_dates_${userId}`;
+  const savedDates = JSON.parse(localStorage.getItem(streakKey)) || [];
+
+  const calendar = document.getElementById("monthly-calendar");
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth(); // 0-indexed
+
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  calendar.innerHTML = "";
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(year, month, day);
+    const dateStr = date.toISOString().split("T")[0];
+
+    const box = document.createElement("div");
+    box.className = "day-box";
+    box.textContent = day;
+
+    if (savedDates.includes(dateStr)) {
+      box.classList.add("filled");
+    }
+
+    calendar.appendChild(box);
+  }
+
+  // Add today to savedDates on journal submit
+  document.getElementById("journal-form").addEventListener("submit", () => {
+    const todayStr = today.toISOString().split("T")[0];
+    if (!savedDates.includes(todayStr)) {
+      savedDates.push(todayStr);
+      localStorage.setItem(streakKey, JSON.stringify(savedDates));
+    }
+  });
+  </script>
+</body>
+</html>

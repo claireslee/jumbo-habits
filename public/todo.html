@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>To-Do List – Jumbo Habits</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script src="protect.js"></script>
+  <script src="navbar.js"></script>
+</head>
+<body>
+  <div class="todo-container">
+    <h1>📝 To-Do List</h1>
+    <form class="todo-form" id="todo-form">
+        <div class="input-row">
+          <input type="text" id="todo-input" placeholder="Add a task..." required>
+          <button type="submit" title="Add Task">+</button>
+        </div>
+      </form>
+    <ul class="todo-list" id="todo-list"></ul>
+  </div>
+
+  <script>
+    const todoForm = document.getElementById("todo-form");
+    const todoInput = document.getElementById("todo-input");
+    const todoList = document.getElementById("todo-list");
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    const storageKey = `todos_${user.userId}`; // unique to user
+
+    let todos = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+    function saveTodos() {
+      localStorage.setItem(storageKey, JSON.stringify(todos));
+    }
+
+    function renderTodos() {
+      todoList.innerHTML = "";
+      todos.forEach((todo, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          ${todo}
+          <button onclick="deleteTodo(${index})">✖</button>
+        `;
+        todoList.appendChild(li);
+      });
+    }
+
+    function deleteTodo(index) {
+      todos.splice(index, 1);
+      saveTodos();
+      renderTodos();
+    }
+
+    todoForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const task = todoInput.value.trim();
+      if (task) {
+        todos.push(task);
+        saveTodos();
+        renderTodos();
+        todoInput.value = "";
+      }
+    });
+
+    renderTodos();
+  </script>
+</body>
+</html>

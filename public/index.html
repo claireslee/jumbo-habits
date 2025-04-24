@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jumbo Habits – Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script src="protect.js"></script>
+  <script src="navbar.js"></script>
+
+</head>
+<body>
+  <!-- Main Content -->
+  <div class="container">
+    <h1>Welcome to Jumbo Habits 🧠💭</h1>
+    <p>
+      Jumbo Habits is a wellness web app built for Tufts students, designed to help you stay mindful, build habits, and reflect daily. 
+      Whether you're trying to improve your sleep, track your study sessions, or just need a space to journal your thoughts, Jumbo Habits is here for you.
+    </p>
+
+    <ul class="features">
+      <li>📝 Reflect in your daily journal</li>
+      <li>📊 Track habits like sleep, water intake, studying, and exercise</li>
+      <li>🌼 Receive affirmations and words of encouragement</li>
+      <li>📚 Access helpful mental health and academic support resources</li>
+    </ul>
+
+    <div class="cta">
+      <a href="journal.html">Start Journaling</a>
+    </div>
+  </div>
+
+</body>
+
+<script>
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log("Current user:", user);
+</script>
+</html>

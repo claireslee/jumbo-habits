@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jumbo Habits – View Journal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script src="protect.js"></script>
+  <script src="navbar.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>📖 Your Journal Entries 📖</h1>
+
+    <form id="filter-form">
+      <label for="filter-date">Filter by Date</label>
+      <input type="date" id="filter-date" name="filter-date">
+      <button type="submit">Search</button>
+    </form>
+
+    <div id="entry-display" class="entry-display">
+      <!-- Journal entries will be listed here -->
+    </div>
+
+    <button type="button" id="show-all-btn">Show All Entries</button>
+  </div>
+
+  <script>
+    document.getElementById("show-all-btn").addEventListener("click", () => {
+        fetchAllEntries();
+    });
+
+    const userId = "auth0|abc123"; // Replace with actual user ID
+
+    async function fetchAllEntries() {
+      const res = await fetch(`/api/journal?userId=${encodeURIComponent(userId)}`);
+      const data = await res.json();
+
+      const display = document.getElementById("entry-display");
+      display.innerHTML = "";
+
+      if (res.ok && data.entries.length) {
+        data.entries.forEach(({ date, entry }) => {
+          display.innerHTML += `
+            <div class="journal-entry">
+              <h3>${date}</h3>
+              <p>${entry}</p>
+            </div>
+          `;
+        });
+      } else {
+        display.innerHTML = "<p>No journal entries found.</p>";
+      }
+    }
+
+    document.getElementById("filter-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const date = document.getElementById("filter-date").value;
+      if (!date) {
+        fetchAllEntries(); // show all again
+        return;
+      }
+
+      const res = await fetch(`/api/journal?userId=${encodeURIComponent(userId)}&date=${encodeURIComponent(date)}`);
+      const data = await res.json();
+
+      const display = document.getElementById("entry-display");
+      display.innerHTML = "";
+
+      if (res.ok && data.entry) {
+        display.innerHTML = `
+          <div class="journal-entry">
+            <h3>${date}</h3>
+            <p>${data.entry}</p>
+          </div>
+        `;
+      } else {
+        display.innerHTML = `<p>No entry found for ${date}.</p>`;
+      }
+    });
+
+    // Fetch all entries on page load
+    fetchAllEntries();
+  </script>
+</body>
+</html>

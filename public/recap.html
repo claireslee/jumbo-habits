@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Daily Recap</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+  <script src="protect.js"></script>
+  <script src="navbar.js"></script>
+  <style>
+    /* External Style Guide */
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
+
+    body {
+      margin: 0;
+      font-family: 'Quicksand', sans-serif;
+      background-color: #fdf0e7;
+      color: #333;
+      background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+    }
+
+    /* Centered Container */
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      text-align: center;
+    }
+
+    /* Headings */
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #444;
+      text-align: center;
+    }
+
+    /* Paragraphs */
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      color: #555;
+    }
+
+    /* Recap List */
+    ul#recapList {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    ul#recapList li {
+      margin-bottom: 0.8rem;
+      color: #444;
+    }
+
+    /* Call-to-action Link */
+    a.cta-link {
+      background-color: #fdfaf6;
+      color: #2f4f4f;
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      font-weight: bold;
+      border: 2px solid #2f4f4f;
+      border-radius: 10px;
+      display: inline-block;
+      margin-top: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    a.cta-link:hover {
+      background-color: #2f4f4f;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>My Daily Recap</h1>
+    <p id="date"></p>
+    <ul id="recapList"></ul>
+    <a href="habit_tracker.html" class="cta-link">← Go Back</a>
+  </div>
+
+  <script>
+    // Set today's date in the heading (formatted as "April 22, 2025")
+    const today = new Date();
+    const options = { month: 'long', day: 'numeric', year: 'numeric' };
+    const formattedDate = today.toLocaleDateString('en-US', options);
+
+    // Set the date below "My Daily Recap"
+    document.getElementById("date").textContent = formattedDate;
+
+    // Retrieve and display the habit data from localStorage
+    const data = JSON.parse(localStorage.getItem("habitData"));
+    const list = document.getElementById("recapList");
+
+    if (data) {
+      // Check if each habit has data, otherwise display "N/A"
+      list.innerHTML = `
+        <li><strong>Sleep:</strong> ${data.sleep || 'N/A'} hours</li>
+        <li><strong>Water:</strong> ${data.water || 'N/A'} gallons</li>
+        <li><strong>Exercise:</strong> ${data.exercise || 'N/A'} minutes</li>
+        <li><strong>Reading:</strong> ${data.reading || 'N/A'} minutes</li>
+        <li><strong>Studying:</strong> ${data.studying || 'N/A'} hours</li>
+      `;
+    } else {
+      list.innerHTML = "<li>No data found.</li>";
+    }
+  </script>
+</body>
+</html>

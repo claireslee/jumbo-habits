@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Daily Habit Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+  <script src="protect.js"></script>
+  <script src="navbar.js"></script>
+  <style>
+    /* Form Styles */
+    form {
+      display: inline-block;
+      text-align: left;
+      padding: 2rem;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 2rem;
+      width: 80%;
+      max-width: 600px;
+    }
+  
+    .center-wrapper {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+  
+    /* New Flexbox Layout for Form */
+    .form-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+  
+    .form-group label {
+      margin-right: 1rem;
+      width: 180px; /* Adjust label width */
+      text-align: left;
+      font-size: 1.1rem; /* Increased font size for labels */
+      line-height: 1.5; /* Ensures labels are aligned with dropdown */
+    }
+  
+    .form-group select {
+      width: 100%; /* Allow dropdown to stretch and align with label */
+      padding: 0.5rem; /* Add padding for uniformity */
+      font-size: 1rem;
+      line-height: 1.5; /* Matches the label's line height */
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+  
+    button {
+      margin-top: 1rem;
+      padding: 0.8rem 1.5rem;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+  
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+  
+
+</head>
+<body>
+  <h1>Daily Habit Tracker</h1>
+
+  <div class="center-wrapper">
+    <form id="habitForm">
+      <div class="form-group">
+        <label for="sleep">Sleep (hours):</label>
+        <select name="sleep" id="sleep"></select>
+      </div>
+
+      <div class="form-group">
+        <label for="water">Water (gallons):</label>
+        <select name="water" id="water"></select>
+      </div>
+
+      <div class="form-group">
+        <label for="exercise">Exercise (minutes):</label>
+        <select name="exercise" id="exercise"></select>
+      </div>
+
+      <div class="form-group">
+        <label for="reading">Reading (minutes):</label>
+        <select name="reading" id="reading"></select>
+      </div>
+
+      <div class="form-group">
+        <label for="studying">Studying (hours):</label>
+        <select name="studying" id="studying"></select>
+      </div>
+
+      <button type="submit">Save My Day</button>
+    </form>
+  </div>
+
+  <script>
+    function populateDropdown(id, range, step = 1) {
+      const select = document.getElementById(id);
+      select.innerHTML = `<option value="">--</option>`;
+      for (let i = 0; i <= range; i += step) {
+        const val = i;
+        const opt = document.createElement("option");
+        opt.value = val;
+        opt.textContent = val;
+        select.appendChild(opt);
+      }
+    }
+
+    // Populate the dropdowns
+    populateDropdown("sleep", 12);
+    populateDropdown("water", 4);
+    populateDropdown("exercise", 120, 10);
+    populateDropdown("reading", 120, 10);
+    populateDropdown("studying", 4);
+
+    // Handle form submission
+    document.getElementById("habitForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const formData = {
+        sleep: document.getElementById("sleep").value,
+        water: document.getElementById("water").value,
+        exercise: document.getElementById("exercise").value,
+        reading: document.getElementById("reading").value,
+        studying: document.getElementById("studying").value,
+      };
+      localStorage.setItem("habitData", JSON.stringify(formData));
+      window.location.href = "recap.html";
+    });
+
+    // Set today's date in the heading
+    const today = new Date();
+    const options = { month: 'long', day: 'numeric', year: 'numeric' }; // Format to "April 22, 2025"
+    const formattedDate = today.toLocaleDateString('en-US', options);
+
+    document.querySelector("h1").textContent = `Daily Habit Tracker – ${formattedDate}`;
+  </script>
+</body>
+</html>
