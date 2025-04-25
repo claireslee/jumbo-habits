@@ -15,22 +15,30 @@
     <form id="filter-form">
       <label for="filter-date">Filter by Date</label>
       <input type="date" id="filter-date" name="filter-date">
-      <button type="submit">Search</button>
+      <div class="buttons-container">
+        <button type="submit">Search</button>
+        <button type="button" class="show-all-button" id="show-all-btn">Show All Entries</button>
+      </div>
+      
     </form>
 
     <div id="entry-display" class="entry-display">
       <!-- Journal entries will be listed here -->
     </div>
-
-    <button type="button" id="show-all-btn">Show All Entries</button>
   </div>
 
   <script>
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userId = user?.userId;
+
+    if (!userId) {
+      alert("⚠️ You must be logged in to view journal entries.");
+      window.location.href = "/login.html"; // or wherever your login page is
+    }
+
     document.getElementById("show-all-btn").addEventListener("click", () => {
         fetchAllEntries();
     });
-
-    const userId = "auth0|abc123"; // Replace with actual user ID
 
     async function fetchAllEntries() {
       const res = await fetch(`/api/journal?userId=${encodeURIComponent(userId)}`);
@@ -43,7 +51,7 @@
         data.entries.forEach(({ date, entry }) => {
           display.innerHTML += `
             <div class="journal-entry">
-              <h3>${date}</h3>
+              <h3>${formatDate(date)}</h3>
               <p>${entry}</p>
             </div>
           `;
@@ -51,6 +59,12 @@
       } else {
         display.innerHTML = "<p>No journal entries found.</p>";
       }
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const options = { month: 'long', day: 'numeric', year: 'numeric' };
+      return date.toLocaleDateString('en-US', options);
     }
 
     document.getElementById("filter-form").addEventListener("submit", async (e) => {
@@ -71,12 +85,12 @@
       if (res.ok && data.entry) {
         display.innerHTML = `
           <div class="journal-entry">
-            <h3>${date}</h3>
+            <h3>${formatDate(date)}</h3>
             <p>${data.entry}</p>
           </div>
         `;
       } else {
-        display.innerHTML = `<p>No entry found for ${date}.</p>`;
+        display.innerHTML = `<p>No entry found for ${formatDate(date)}.</p>`;
       }
     });
 

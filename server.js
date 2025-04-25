@@ -76,3 +76,51 @@ app.get('/api/journal', async (req, res) => {
   }
 });
 
+// Habit Tracker POST route
+app.post('/api/habits', async (req, res) => {
+  const { userId, date, habits } = req.body;
+
+  if (!userId || !date || !habits) {
+    return res.status(400).json({ message: "Missing fields!" });
+  }
+
+  try {
+    const result = await db.collection('habits').updateOne(
+      { userId, date },
+      { $set: { habits } },
+      { upsert: true }
+    );
+    res.status(200).json({ message: "✅ Habit data saved!", result });
+  } catch (err) {
+    console.error("❌ Error saving habits:", err);
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
+
+// Habit Tracker GET route – fetch one or all habit entries
+app.get('/api/habits', async (req, res) => {
+  const { userId, date } = req.query;
+
+  if (!userId) {
+    return res.status(400).json({ message: "Missing userId in query." });
+  }
+
+  try {
+    if (date) {
+      const entry = await db.collection('habits').findOne({ userId, date });
+      if (!entry) return res.status(404).json({ entry: null });
+      return res.status(200).json({ entry: entry.habits });
+    } else {
+      const entries = await db.collection('habits')
+        .find({ userId })
+        .sort({ date: -1 })
+        .toArray();
+      return res.status(200).json({ entries });
+    }
+  } catch (err) {
+    console.error("❌ Error fetching habits:", err);
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
+
+

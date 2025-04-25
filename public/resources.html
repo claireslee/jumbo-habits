@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en"></html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jumbo Habits - Resources</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="style.css"> 
+    <script src="protect.js"></script>
+    <script src="navbar.js"></script>  
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    .resource-section {
+      padding: 4rem 1rem;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .resource-section h1 {
+      font-family: 'Playfair Display', serif;
+      color: var(--coffee-brown);
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .resource-section h3 {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--coffee-brown);
+      padding: 0 1rem;
+    }
+
+    .resource-list {
+      padding: 4rem 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); 
+      gap: 2rem;
+      text-align: center;
+    }
+    
+    .resource {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .resource img {
+      border-radius: 50%;
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .resource h2 {
+      font-family: 'Playfair Display', serif;
+      color: var(--coffee-brown);
+      margin-top: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .resource p {
+      font-size: 1.1rem;
+      color: var(--coffee-brown);
+    }
+    
+  </style>
+</head>
+<body>
+  <!-- Heading -->
+  <section class="resource-section">
+    <h1>Resources</h1>
+    <h3>We know that habits take time to form. Below are some of our partners to help you stay on track!</h3>
+  </section>
+  <!-- Resources broken up-->
+  <section class="resource-list">
+    <div class="resource">
+      <img src="chms.jpeg" alt="CMHS" width="200" height="200">
+      <h2>CMHS</h2>
+      <p>The Tufts Counseling and Mental Health Service (CMHS) offers short-term therapy, urgent care, and referrals to off-campus providers. Confidential support is available to all Tufts students.</p>
+    </div>
+    <div class="resource">
+      <img src="ears4peers.jpeg" alt="Ears For Peers" width="200" height="200">
+      <h2>Ears for Peers</h2>
+      <p>Ears for Peers is a 24/7 anonymous, student-run helpline. Trained listeners are available to talk about anything, big or small—no judgment, just support.</p>
+    </div>
+    <div class="resource">
+      <img src="headspace.png" alt="Headspace" width="200" height="200">
+      <h2>Headspace</h2>
+      <p>Headspace is a mindfulness and meditation app that offers guided exercises to help with stress, focus, and sleep. Free premium access may be available to students.</p>
+    </div>
+    <div class="resource">
+      <img src="calm.jpeg" alt="Calm App" width="200" height="200">
+      <h2>Calm</h2>
+      <p>The Calm app provides sleep stories, breathing exercises, and meditations to support emotional wellness and better rest.</p>
+    </div>
+  </section>  
+</body>
+</html>

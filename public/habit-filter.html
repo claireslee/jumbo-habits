@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jumbo Habits – View Habits</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script src="protect.js"></script>
+  <script src="navbar.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>📊 Your Habit Tracker 📊</h1>
+
+    <form id="filter-form">
+      <label for="filter-date">Filter by Date</label>
+      <input type="date" id="filter-date" name="filter-date">
+
+      <label for="filter-habit">Filter by Habit</label>
+      <select name="filter-habit" id="filter-habit">
+        <option value="sleep">Sleep</option>
+        <option value="water">Water</option>
+        <option value="exercise">Exercise</option>
+        <option value="reading">Reading</option>
+        <option value="studying">Studying</option>
+      </select>
+
+      <div class="buttons-container">
+        <button type="submit">Search</button>
+        <button type="button" class="show-all-button" id="show-all-btn">Show All Entries</button>
+      </div>
+    </form>
+
+    <div id="habit-display" class="entry-display">
+      <!-- Habit entries will appear here -->
+    </div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userId = user?.userId;
+
+    if (!userId) {
+      alert("⚠️ You must be logged in to view your habits.");
+      window.location.href = "/login.html";
+    }
+
+    document.getElementById("show-all-btn").addEventListener("click", () => {
+      fetchAllHabits();
+    });
+
+    async function fetchAllHabits() {
+      const res = await fetch(`/api/habits?userId=${encodeURIComponent(userId)}`);
+      const data = await res.json();
+
+      renderHabits(data.entries);
+    }
+
+    function renderHabits(entries, filterHabit = "") {
+        const display = document.getElementById("habit-display");
+        display.innerHTML = "";
+
+        if (!entries.length) {
+            display.innerHTML = "<p>No habit entries found.</p>";
+            return;
+        }
+
+        entries.forEach(({ date, habits }) => {
+            const matchingHabits = filterHabit
+            ? habits.filter(habit => habit.name.toLowerCase().includes(filterHabit.toLowerCase()))
+            : habits;
+
+            if (matchingHabits.length > 0) {
+            display.innerHTML += `
+                <div class="habit-entry">
+                <h3>${formatDate(date)}</h3>
+                    <p>
+                    ${matchingHabits.map(habit =>
+                    `<strong>${habit.name}</strong>: ${habit.value} ${habit.unit}<br>`
+                    ).join('')}
+                    <p>
+                </div>
+            `;
+            }
+        });
+
+        if (display.innerHTML === "") {
+            display.innerHTML = `<p>No entries matched your filter.</p>`;
+        }
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const options = { month: 'long', day: 'numeric', year: 'numeric' };
+      return date.toLocaleDateString('en-US', options);
+    }
+
+    document.getElementById("filter-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const date = document.getElementById("filter-date").value;
+      const habitFilter = document.getElementById("filter-habit").value;
+
+      if (date) {
+        const res = await fetch(`/api/habits?userId=${encodeURIComponent(userId)}&date=${encodeURIComponent(date)}`);
+        const data = await res.json();
+
+        if (res.ok && data.entry) {
+          renderHabits([{ date, habits: data.entry }], habitFilter);
+        } else {
+          document.getElementById("habit-display").innerHTML = `<p>No entry found for ${formatDate(date)}.</p>`;
+        }
+      } else {
+        const res = await fetch(`/api/habits?userId=${encodeURIComponent(userId)}`);
+        const data = await res.json();
+
+        if (res.ok && data.entries) {
+          renderHabits(data.entries, habitFilter);
+        }
+      }
+    });
+
+    // Load all habits on page load
+    fetchAllHabits();
+  </script>
+</body>
+</html>
