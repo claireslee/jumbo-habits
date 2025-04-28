@@ -1,127 +1,275 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Jumbo Habits – View Habits</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <script src="protect.js"></script>
-  <script src="navbar.js"></script>
+  <meta charset="UTF-8">
+  <title>Jumbo Habits – View Habits</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script src="protect.js"></script>
+  <script src="navbar.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h1>📊 Your Habit Tracker 📊</h1>
+  <div class="container">
+    <h1>📊 Your Habit Tracker 📊</h1>
 
-    <form id="filter-form">
-      <label for="filter-date">Filter by Date</label>
-      <input type="date" id="filter-date" name="filter-date">
+    <form id="filter-form">
+      <label for="filter-date">Filter by Date</label>
+      <input type="date" id="filter-date" name="filter-date">
 
-      <label for="filter-habit">Filter by Habit</label>
-      <select name="filter-habit" id="filter-habit">
-        <option value="sleep">Sleep</option>
-        <option value="water">Water</option>
-        <option value="exercise">Exercise</option>
-        <option value="reading">Reading</option>
-        <option value="studying">Studying</option>
-      </select>
+      <label for="filter-habit">Filter by Habit</label>
+      <select name="filter-habit" id="filter-habit">
+        <option value="choose">Choose a Habit</option>
+        <option value="sleep">Sleep</option>
+        <option value="water">Water</option>
+        <option value="exercise">Exercise</option>
+        <option value="reading">Reading</option>
+        <option value="studying">Studying</option>
+      </select>
 
-      <div class="buttons-container">
-        <button type="submit">Search</button>
-        <button type="button" class="show-all-button" id="show-all-btn">Show All Entries</button>
-      </div>
-    </form>
+      <div class="buttons-container">
+        <button type="submit">Search</button>
+        <button type="button" class="show-all-button" id="show-all-btn">Show All Entries</button>
+      </div>
+    </form>
 
-    <div id="habit-display" class="entry-display">
-      <!-- Habit entries will appear here -->
-    </div>
-  </div>
+    <div id="habit-display" class="entry-display">
 
-  <script>
-    const user = JSON.parse(localStorage.getItem("user"));
-    const userId = user?.userId;
+    </div>
+  </div>
 
-    if (!userId) {
-      alert("⚠️ You must be logged in to view your habits.");
-      window.location.href = "/login.html";
-    }
+  <!-- <script>
+        function populateDropdown(id, range, step = 1) {
+          const select = document.getElementById(id);
+          select.innerHTML = `<option value="">--</option>`;
+          for (let i = 0; i <= range; i += step) {
+            const opt = document.createElement("option");
+            opt.value = i;
+            opt.textContent = i;
+            select.appendChild(opt);
+          }
+        }
+    
+        // Populate the dropdowns
+        populateDropdown("sleep", 12);
+        populateDropdown("water", 4);
+        populateDropdown("exercise", 120, 10);
+        populateDropdown("reading", 120, 10);
+        populateDropdown("studying", 4);
+    
+        // Set today's date in the heading
+        const today = new Date();
+        const options = { month: 'long', day: 'numeric', year: 'numeric' };
+        const formattedDate = today.toLocaleDateString('en-US', options);
+        document.querySelector("h1").textContent = `Daily Habit Tracker – ${formattedDate}`;
+    
+        // Affirmation Popup
+        async function showAffirmationPopup() {
+          try {
+            const res = await fetch("https://www.affirmations.dev/");
+            const data = await res.json();
+    
+            document.getElementById("popup-text").textContent = data.affirmation;
+            const popup = document.getElementById("popup");
+            popup.style.display = "block";
+    
+            // Hide after 4 seconds
+            setTimeout(() => {
+              popup.style.display = "none";
+              window.location.href = "recap.html"; // ✅ move redirect INSIDE the setTimeout
+            }, 4000);
+          } catch (error) {
+            console.error("Error fetching affirmation:", error);
+            window.location.href = "recap.html"; // fallback redirect
+          }
+        }
+    
+        // Handle form submission
+        document.getElementById("habitForm").addEventListener("submit", async function (event) {
+          event.preventDefault();
+    
+          const user = JSON.parse(localStorage.getItem("user"));
+          const userId = user?.userId;
+    
+          if (!userId) {
+            alert("You're not logged in.");
+            return;
+          }
+    
+          const today = new Date().toISOString().split("T")[0];
+    
+          const habitEntries = {
+            sleep: { value: document.getElementById("sleep").value, unit: "hours" },
+            water: { value: document.getElementById("water").value, unit: "gallons" },
+            exercise: { value: document.getElementById("exercise").value, unit: "minutes" },
+            reading: { value: document.getElementById("reading").value, unit: "minutes" },
+            studying: { value: document.getElementById("studying").value, unit: "hours" },
+          };
+    
+          const formData = {
+            userId,
+            date: today,
+            habits: []
+          };
+    
+          for (const [name, { value, unit }] of Object.entries(habitEntries)) {
+            if (value) {
+              formData.habits.push({ name, value, unit });
+            }
+          }
+    
+          try {
+            const res = await fetch("/api/habits", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(formData)
+            });
+    
+            if (!res.ok) throw new Error("Failed to save habit data");
+    
+            // Disable the button immediately to prevent double clicking
+            const submitButton = document.querySelector("#habitForm button[type='submit']");
+            submitButton.disabled = true;
+            submitButton.textContent = "Saving...";
+    
+            await showAffirmationPopup(); // now handles redirection!
+            
+          } catch (err) {
+            console.error(err);
+            alert("Something went wrong while saving your habits.");
+          }
+        });
+      </script> -->
 
-    document.getElementById("show-all-btn").addEventListener("click", () => {
-      fetchAllHabits();
-    });
+  <script>
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userId = user?.userId;
 
-    async function fetchAllHabits() {
-      const res = await fetch(`/api/habits?userId=${encodeURIComponent(userId)}`);
-      const data = await res.json();
+    if (!userId) {
+      alert("⚠️ You must be logged in to view your habits.");
+      window.location.href = "/login.html";
+    }
 
-      renderHabits(data.entries);
-    }
+    document.getElementById("show-all-btn").addEventListener("click", () => {
+      fetchAllHabits();
+    });
 
-    function renderHabits(entries, filterHabit = "") {
-        const display = document.getElementById("habit-display");
-        display.innerHTML = "";
+    async function showAffirmationPopup() {
+          try {
+            const res = await fetch("https://www.affirmations.dev/");
+            const data = await res.json();
+    
+            document.getElementById("popup-text").textContent = data.affirmation;
+            const popup = document.getElementById("popup");
+            popup.style.display = "block";
+    
+            // Hide after 4 seconds
+            setTimeout(() => {
+              popup.style.display = "none";
+              window.location.href = "recap.html"; // ✅ move redirect INSIDE the setTimeout
+            }, 4000);
+          } catch (error) {
+            console.error("Error fetching affirmation:", error);
+            window.location.href = "recap.html"; // fallback redirect
+          }
+    }
 
-        if (!entries.length) {
-            display.innerHTML = "<p>No habit entries found.</p>";
-            return;
-        }
+    async function fetchAllHabits() {
+      const res = await fetch(`/api/habits?userId=${encodeURIComponent(userId)}`);
+      const data = await res.json();
 
-        entries.forEach(({ date, habits }) => {
-            const matchingHabits = filterHabit
-            ? habits.filter(habit => habit.name.toLowerCase().includes(filterHabit.toLowerCase()))
-            : habits;
+      renderHabits(data.entries);
+    }
 
-            if (matchingHabits.length > 0) {
-            display.innerHTML += `
-                <div class="habit-entry">
-                <h3>${formatDate(date)}</h3>
-                    <p>
-                    ${matchingHabits.map(habit =>
-                    `<strong>${habit.name}</strong>: ${habit.value} ${habit.unit}<br>`
-                    ).join('')}
-                    <p>
-                </div>
-            `;
-            }
-        });
+    // show habits
+    function renderHabits(entries, filterHabit = "") {
+        const display = document.getElementById("habit-display");
+        display.innerHTML = "";
 
-        if (display.innerHTML === "") {
-            display.innerHTML = `<p>No entries matched your filter.</p>`;
-        }
-    }
+        if (!entries.length) {
+            display.innerHTML = "<p>No habit entries found.</p>";
+            return;
+        }
+        
+        // show each habit entry in database
+        entries.forEach(({ date, habits }) => {
+            const matchingHabits = filterHabit
+            ? habits.filter(habit => habit.name.toLowerCase().includes(filterHabit.toLowerCase()))
+            : habits;
 
-    function formatDate(dateString) {
-      const [year, month, day] = dateString.split('-');
-      const date = new Date(year, month - 1, day);
-      const options = { month: 'long', day: 'numeric', year: 'numeric' };
-      return date.toLocaleDateString('en-US', options);
-    }
+            if (matchingHabits.length > 0) {
+            display.innerHTML += `
+                <div class="habit-entry">
+                <h3>${formatDate(date)}</h3>
+                    <p>
+                    ${matchingHabits.map(habit =>
+                    `<strong>${habit.name}</strong>: ${habit.value} ${habit.unit}<br>`
+                    ).join('')}
+                    <p>
+                </div>
+            `;
+            }
+        });
 
-    document.getElementById("filter-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const date = document.getElementById("filter-date").value;
-      const habitFilter = document.getElementById("filter-habit").value;
+        if (display.innerHTML === "") {
+            display.innerHTML = `<p>No entries matched your filter.</p>`;
+        }
+    }
 
-      if (date) {
-        const res = await fetch(`/api/habits?userId=${encodeURIComponent(userId)}&date=${encodeURIComponent(date)}`);
-        const data = await res.json();
+    function formatDate(dateString) {
+      const [year, month, day] = dateString.split('-');
+      const date = new Date(year, month - 1, day);
+      const options = { month: 'long', day: 'numeric', year: 'numeric' };
+      return date.toLocaleDateString('en-US', options);
+    }
 
-        if (res.ok && data.entry) {
-          renderHabits([{ date, habits: data.entry }], habitFilter);
-        } else {
-          document.getElementById("habit-display").innerHTML = `<p>No entry found for ${formatDate(date)}.</p>`;
-        }
-      } else {
-        const res = await fetch(`/api/habits?userId=${encodeURIComponent(userId)}`);
-        const data = await res.json();
+    // handle filter
+    document.getElementById("filter-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      const date = document.getElementById("filter-date").value;
+      const habitFilter = document.getElementById("filter-habit").value;
 
-        if (res.ok && data.entries) {
-          renderHabits(data.entries, habitFilter);
-        }
-      }
-    });
+      if (habitFilter === "choose") {
+        // only filter by date
+        if (date) {
+          const res = await fetch(`/api/habits?userId=${encodeURIComponent(userId)}&date=${encodeURIComponent(date)}`);
+          const data = await res.json();
 
-    // Load all habits on page load
-    fetchAllHabits();
-  </script>
+          if (res.ok && data.entry) {
+            renderHabits([{ date, habits: data.entry }]);
+          } else {
+            document.getElementById("habit-display").innerHTML = `<p>No entry found for ${formatDate(date)}.</p>`;
+          }
+        }
+      } else {
+        // both date and habit filter
+        if (date) {
+          const res = await fetch(`/api/habits?userId=${encodeURIComponent(userId)}&date=${encodeURIComponent(date)}&habit=${encodeURIComponent(habitFilter)}`);
+          const data = await res.json();
+
+          if (res.ok && data.entry) {
+            renderHabits([{ date, habits: data.entry }], habitFilter);
+          } else {
+            document.getElementById("habit-display").innerHTML = `<p>No entry found for ${formatDate(date)} and habit "${habitFilter}".</p>`;
+          }
+        } else {
+          const res = await fetch(`/api/habits?userId=${encodeURIComponent(userId)}`);
+          const data = await res.json();
+
+          if (res.ok && data.entries) {
+            renderHabits(data.entries, habitFilter);
+          }
+        }
+          await showAffirmationPopup(); // now handles redirection!
+      }
+
+      // reset filters
+      document.getElementById("filter-date").value = ""; 
+      document.getElementById("filter-habit").value = "choose";
+    });
+
+    // load all habits on page load
+    fetchAllHabits();
+  </script>
 </body>
 </html>
