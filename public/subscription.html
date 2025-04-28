@@ -5,43 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Subscription Plans</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="style.css">
   <script src="protect.js"></script>
   <script src="navbar.js"></script>
 
   <style>
     .plan {
-  background-color: #fdfaf6;
-  border-radius: 20px;
-  padding: 1rem 1.5rem;  /* Reduced padding */
-  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+      background-color: #fdfaf6;
+      border-radius: 20px;
+      padding: 1rem 1.5rem; 
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-.plan .plan-price {
-  font-size: 1.5rem;  /* Adjusted font size */
-}
+    .plan .plan-price {
+      font-size: 1.5rem;  
+    }
 
-.subscribe-btn {
-  margin-top: 1rem; /* Reduced margin from 2rem to 1rem */
-  background-color: #a3d2ca;
-  color: white;
-  padding: 0.6rem 1.2rem;  /* Adjusted button padding */
-  border: none;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+    .subscribe-btn {
+      margin-top: 1rem;
+      background-color: #a3d2ca;
+      color: white;
+      padding: 0.6rem 1.2rem;  
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
 
-.subscribe-btn:hover {
-  background-color: #7fb8ae;
-}
+    .subscribe-btn:hover {
+      background-color: #7fb8ae;
+    }
 
     .plans-container {
       max-width: 900px;
@@ -135,7 +136,6 @@
       color: #555;
     }
 
-    /* Modal (Popup) Styles */
     .modal {
       display: none; 
       position: fixed;
@@ -150,18 +150,17 @@
       padding-top: 60px;
     }
 
-    /* Modal Content */
     .modal-content {
       background-color: #fefefe;
       margin: 5% auto;
       padding: 20px;
       border: 1px solid #888;
-      width: 80%;
+      width: 90%; 
       max-width: 400px;
       border-radius: 10px;
+      box-sizing: border-box;
     }
 
-    /* Close Button */
     .close {
       color: #aaa;
       float: right;
@@ -182,6 +181,7 @@
       margin: 10px 0;
       border: 1px solid #ccc;
       border-radius: 5px;
+      box-sizing: border-box; 
     }
 
     .payment-form button {
@@ -218,10 +218,10 @@
   function handlePaymentFormSubmit(event) {
     event.preventDefault();
 
-    // Simulate successful payment
+    // successful payment
     currentPlan = 'premium';
 
-    // 🔐 Save plan for this specific user
+    // save plan
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
       localStorage.setItem(`plan_${user.userId}`, "premium");
@@ -229,7 +229,7 @@
 
     closeModal();
     updateButtons();
-    location.reload(); // ✅ force navbar to refresh and show "Streaks"
+    location.reload(); 
   }
 
   function updateButtons() {
@@ -254,7 +254,7 @@
   window.onload = function () {
     document.querySelector('.payment-form').addEventListener('submit', handlePaymentFormSubmit);
 
-    // 🧠 Load current user’s plan from localStorage
+    // load plan from localStorage
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
       const savedPlan = localStorage.getItem(`plan_${user.userId}`);
@@ -277,9 +277,9 @@
       <p>Start with the basics or upgrade for deeper insights, personalized growth, and guided calm.</p>
     </div>
   
-    <!-- Container for the plans -->
+    <!-- Container for plans -->
     <div class="plans-container">
-      <!-- Free Plan -->
+      <!-- free plan -->
       <div class="plan">
         <h2>Free</h2>
         <div class="plan-price">$0/mo</div>
@@ -288,25 +288,28 @@
           <li>Simple journal entries</li>
           <li>Daily motivation reminders</li>
         </ul>
-        <!-- Button for Free Plan -->
+        <!-- free plan button -->
         <button id="free-btn" class="subscribe-btn">This is your current subscription!</button>
       </div>
   
-      <!-- Premium Plan -->
+      <!-- premium plan -->
       <div class="plan">
         <h2>Premium</h2>
         <div class="plan-price">$4.99/mo</div>
         <ul>
-          <li>Custom habit suggestions</li>
-          <li>Visual tracking dashboard</li>
+          <li>Advanced analytics & mood insights</li>
+          <li>Personalized study & productivity planner</li>
+          <li>Guided breathing & relaxation sessions</li>
+          <li>Custom habit suggestions based on patterns</li>
+          <li>Visual goal tracking dashboard</li>
           <li>Early access to new features</li>
         </ul>
-        <!-- Button for Premium Plan -->
+        <!-- premium plan button -->
         <button id="premium-btn" class="subscribe-btn">Upgrade to Premium</button>
       </div>
     </div>
   
-    <!-- Modal for Payment Information -->
+    <!-- payment info -->
     <div id="paymentModal" class="modal">
       <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>

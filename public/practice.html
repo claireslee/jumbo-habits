@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jumbo Habits – Journal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Playfair Display', serif;
+      background-color: #f9f9f9;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 2rem;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      color: #6b4f3a;
+    }
+
+    label, textarea, input {
+      display: block;
+      width: 100%;
+      margin-top: 1rem;
+      font-size: 1.1rem;
+    }
+
+    textarea, input {
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-family: 'Playfair Display', serif;
+    }
+
+    button {
+      padding: 12px 24px;
+      background-color: #6b4f3a;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-top: 2rem;
+    }
+
+    button:hover {
+      background-color: #5a3e2f;
+    }
+
+    #affirmation-container {
+      background-color: white;
+      margin-top: 2rem;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: inline-block;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    p {
+      color: #6b4f3a;
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🌼 Today's Journal 🌼</h1>
+
+    <form id="journal-form">
+      <label for="date">Date:</label>
+      <input type="date" id="date" name="date" required>
+
+      <label for="entry">Journal Entry:</label>
+      <textarea id="entry" name="entry" placeholder="Write your thoughts..." required></textarea>
+
+      <button type="button" onclick="submitJournal()">Save Entry & Get a Joke</button>
+    </form>
+
+    <div id="affirmation-container">
+      <p id="affirmation">Submit your journal to get a fun Chuck Norris joke! 🤠</p>
+    </div>
+  </div>
+
+  <script>
+    function submitJournal() {
+      const date = document.getElementById('date').value;
+      const entry = document.getElementById('entry').value;
+
+      if (!date || !entry) {
+        alert("Please fill out both fields.");
+        return;
+      }
+
+      console.log("Journal Saved:", { date, entry });
+
+      fetch('https://api.chucknorris.io/jokes/random?category=history')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('affirmation').innerText = data.value;
+        })
+        .catch(error => console.error('Error fetching joke:', error));
+
+      // Optionally clear the form
+      document.getElementById('entry').value = "";
+    }
+  </script>
+
+</body>
+</html>
