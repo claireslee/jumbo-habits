@@ -385,15 +385,19 @@ nav ul li.dropdown:hover .dropdown-content {
 
 .calendar-grid {
   display: grid;
-  grid-template-columns: repeat(7, 60px); /* wider boxes */
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+  gap: 12px;
   justify-content: center;
   margin-top: 1rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .day-box {
-  width: 60px;
-  height: 60px;
+  aspect-ratio: 1 / 1; /* keep squares */
+  width: 100%;
+  max-width: 60px;
   border-radius: 12px;
   background-color: #f0f0f0;
   border: 2px solid #ccc;
